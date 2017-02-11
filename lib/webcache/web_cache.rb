@@ -69,7 +69,11 @@ class WebCache
     begin
       Response.new open(url, options)
     rescue => e
-      Response.new error: e.message, base_uri: url, content: e.message
+      opts = { error: e.message, base_uri: url, content: e.message }
+      if e.respond_to? :io and e.io.respond_to? :readlines
+        opts[:body] = e.io.readlines.join
+      end
+      Response.new opts
     end
   end
 

@@ -62,14 +62,18 @@ describe WebCache do
     end
 
     context 'with invalid request' do
-      let(:response) { cache.get 'http://example.com/not_found' }
+      let(:response) { cache.get 'http://dannyben.com/not_found' }
 
-      it 'returns the error message' do
+      it 'sets content to the error message' do
         expect(response.content).to eq '404 Not Found'
       end
 
       it 'sets error to the error message' do
         expect(response.error).to eq '404 Not Found'
+      end
+
+      it 'sets body to the actual response body' do
+        expect(response.body).to match /<title>Page Not Found \(404\) - My Server<\/title>/
       end
     end
 
